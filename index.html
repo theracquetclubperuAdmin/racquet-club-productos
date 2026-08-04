@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The Racquet Club</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f4f5f3;
+      font-family: Arial, sans-serif;
+      color: #173f2d;
+    }
+
+    .ficha {
+      max-width: 460px;
+      margin: auto;
+      padding: 28px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+      text-align: center;
+    }
+
+    .logo {
+      width: 115px;
+      height: 115px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 12px;
+      border: 2px solid #173f2d;
+    }
+
+    h1 {
+      margin: 5px 0;
+      font-size: 23px;
+      letter-spacing: 1px;
+    }
+
+    .subtitulo {
+      margin-bottom: 25px;
+      font-size: 13px;
+      color: #68756d;
+    }
+
+    .producto {
+      margin-bottom: 22px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .datos {
+      text-align: left;
+      border-top: 1px solid #d8ded9;
+    }
+
+    .dato {
+      padding: 14px 0;
+      border-bottom: 1px solid #d8ded9;
+    }
+
+    .etiqueta {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #7b857f;
+      text-transform: uppercase;
+    }
+
+    .valor {
+      font-size: 16px;
+      color: #173f2d;
+    }
+
+    .mensaje {
+      padding: 30px 10px;
+      color: #555;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #7b857f;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="ficha">
+    <img src="logo.png" alt="The Racquet Club" class="logo">
+
+    <h1>THE RACQUET CLUB</h1>
+    <div class="subtitulo">Performance Wear</div>
+
+    <section id="contenido">
+      <div class="mensaje">Cargando información del producto...</div>
+    </section>
+
+    <footer>Producto original de The Racquet Club</footer>
+  </main>
+
+  <script>
+    const parametros = new URLSearchParams(window.location.search);
+    const idProducto = parametros.get("id");
+
+    fetch("productos.json")
+      .then(respuesta => respuesta.json())
+      .then(productos => {
+        const producto = productos.find(
+          item => item.id === idProducto
+        );
+
+        const contenido = document.getElementById("contenido");
+
+        if (!producto) {
+          contenido.innerHTML =
+            '<div class="mensaje">Producto no encontrado.</div>';
+          return;
+        }
+
+        contenido.innerHTML = `
+          <div class="producto">${producto.nombre}</div>
+
+          <div class="datos">
+            <div class="dato">
+              <span class="etiqueta">Color</span>
+              <span class="valor">${producto.color}</span>
+            </div>
+
+            <div class="dato">
+              <span class="etiqueta">Talla</span>
+              <span class="valor">${producto.talla}</span>
+            </div>
+
+            <div class="dato">
+              <span class="etiqueta">SKU</span>
+              <span class="valor">${producto.sku}</span>
+            </div>
+
+            <div class="dato">
+              <span class="etiqueta">Colección</span>
+              <span class="valor">${producto.coleccion}</span>
+            </div>
+
+            <div class="dato">
+              <span class="etiqueta">Temporada</span>
+              <span class="valor">${producto.temporada}</span>
+            </div>
+          </div>
+        `;
+      })
+      .catch(() => {
+        document.getElementById("contenido").innerHTML =
+          '<div class="mensaje">No se pudo cargar la información.</div>';
+      });
+  </script>
+
+</body>
+</html>
